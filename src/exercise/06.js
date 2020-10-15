@@ -1,32 +1,41 @@
 // Basic Forms
 // http://localhost:3000/isolated/exercise/06.js
 
-import React from 'react'
+import React, { useState } from 'react'
 
 function UsernameForm({onSubmitUsername}) {
-  // 🐨 add a submit event handler here (`handleSubmit`).
-  // 💰 Make sure to accept the `event` as an argument and call
-  // `event.preventDefault()` to prevent the default behavior of form submit
-  // events (which refreshes the page).
-  //
-  // 🐨 get the value from the username input (using whichever method
-  // you prefer from the options mentioned in the instructions)
-  // 💰 For example: event.target.elements[0].value
-  // 🐨 Call `onSubmitUsername` with the value of the input
+  const [error, setError] = useState(null)
 
-  // 🐨 add the onSubmit handler to the <form> below
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const value = event.target.elements.hobby.value
+    onSubmitUsername(value)
+  };
 
-  // 🐨 replace input's name attribute with id attribute
-  // 🐨 make sure to associate the label to the input. 
-  // to do so, set the value of 'htmlFor' prop of the label to the id of input
+  const hobbyValidator = (event) => {
+    const isValid = event.target.value === event.target.value.toLowerCase()
+    if (!isValid) {
+      setError('sorry, lower case only')
+    } else {
+      setError(null)
+    }
+  }
+
   return (
-    <form>
-      <div>
-        <label>Username:</label>
-        <input name="username" type="text" />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    <>
+      {error && <p role="alert">{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="username">Username:</label>
+          <input id="username" type="text" />
+        </div>
+        <div>
+          <label htmlFor="hobby">Hobby, lowercase only:</label>
+          <input id="hobby" type="text" onChange={hobbyValidator}/>
+        </div>
+        <button type="submit" disabled={error}>Submit</button>
+      </form>
+    </>
   )
 }
 
